@@ -17,7 +17,7 @@ const DiningPage = async ({ params }: DiningPageProps) => {
 
   return (
     <div>
-      <h1>{restaurant.title}</h1>
+      <h1>{restaurant.attributes.title}</h1>
       {restaurant.relationships?.field_image?.data?.meta?.imageDerivatives?.links?.max_1600_10_7?.href && (
         <img
           src={restaurant.relationships.field_image.data.meta.imageDerivatives.links.max_1600_10_7.href}
@@ -26,7 +26,7 @@ const DiningPage = async ({ params }: DiningPageProps) => {
           height={900}
         />
       )}
-      <div dangerouslySetInnerHTML={{ __html: restaurant.body.processed }} />
+      <div dangerouslySetInnerHTML={{ __html: restaurant.attributes.body.processed }} />
     </div>
   );
 };

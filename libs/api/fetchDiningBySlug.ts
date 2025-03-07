@@ -18,7 +18,7 @@ export const fetchDiningBySlug = async (slug: string) => {
       return null; // Return null if restaurant is not found
     }
 
-    return restaurantData.attributes;
+    return restaurantData;
   } catch (error) {
     console.error('Error fetching dining data:', error);
     return null;
