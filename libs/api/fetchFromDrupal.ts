@@ -13,6 +13,9 @@ export async function fetchFromDrupal({ endpoint, params = {} }: FetchOptions) {
   const password = process.env.NEXT_PUBLIC_HTAUTH_P;
   const consumerId = process.env.NEXT_PUBLIC_CONSUMERUUID;
   const apiKey = process.env.NEXT_PUBLIC_UP_API_KEY;
+  const token = process.env.NEXT_PUBLIC_OATH_KEY;
+  const clientID = process.env.DRUPAL_CLIENT_ID
+  const clientSecret = process.env.DRUPAL_CLIENT_SECRET
 
   if (!baseUrl || !apiBase) {
     throw new Error('Drupal API configuration is missing.');
@@ -22,18 +25,15 @@ export async function fetchFromDrupal({ endpoint, params = {} }: FetchOptions) {
   const url = new URL(`${baseUrl}/${apiBase}/${endpoint}`);
   
   // Log the URL before appending parameters
-  console.log("Base URL:", baseUrl);
-  console.log("API Base URL:", apiBase);
-  console.log("Endpoint:", endpoint);
     console.log("Full URL:", url.toString());
   console.log("Params:", params);
 
   // Encode and append parameters
-  Object.entries(params).forEach(([key, value]) => {
-    // Log each parameter before appending
-    console.log(`Appending param - ${key}: ${value}`);
-    url.searchParams.append(encodeURIComponent(key), encodeURIComponent(value));
-  });
+  // Object.entries(params).forEach(([key, value]) => {
+  //   // Log each parameter before appending
+  //   console.log(`Appending param - ${key}: ${value}`);
+  //   url.searchParams.append(encodeURIComponent(key), encodeURIComponent(value));
+  // });
 
   console.log("Final URL with parameters:", url.toString());
 
@@ -41,16 +41,19 @@ export async function fetchFromDrupal({ endpoint, params = {} }: FetchOptions) {
   const response = await fetch(url.toString(), {
     method: 'GET',
     headers: {
-      Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
-      'X-Consumer-ID': consumerId || '',
-      'api-key': apiKey || '',
+      // Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
+      // 'X-Consumer-ID': consumerId || '',
+      // 'api-key': apiKey || '',
       'Content-Type': 'application/json',
+      // Authorization: `Bearer ${token}`,
+      Authorization: `Basic ${Buffer.from(`${clientID}:${clientSecret}`).toString('base64')}`,
     },
     cache: 'no-store', // Ensure fresh data on every request
   });
 
   // Log the status code and raw response before parsing
   console.log("Response Status:", response.status);
+  console.log("response", await response.json)
   const rawResponse = await response.text(); // Get the raw response as text for debugging
   console.log("Raw Response:", rawResponse);
 
